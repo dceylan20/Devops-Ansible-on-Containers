@@ -1,0 +1,34 @@
+services:
+  control_node:
+    build:
+      context: ./control_node
+      dockerfile: Dockerfile
+    volumes:
+      - ./control_node/ssh_key:/root/.ssh/id_rsa
+      - ./control_node/ssh_key.pub:/root/.ssh/id_rsa.pub
+    networks:
+      - ansible_network
+
+  managed_node_1:
+    build:
+      context: ./managed_node
+      dockerfile: Dockerfile
+    networks:
+      - ansible_network
+    ports:
+      - "8022:22"
+      - "8080:80"
+
+  managed_node_2:
+    build:
+      context: ./managed_node
+      dockerfile: Dockerfile
+    networks:
+      - ansible_network
+    ports:
+      - "8122:22"
+      - "8180:80"
+
+networks:
+  ansible_network:
+    driver: bridge
